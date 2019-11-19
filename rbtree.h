@@ -243,7 +243,29 @@ public:
             x = root_;
             y = NULL;
         }
-        if (find(key))
+        if (find(key) != end())
+        {
+            std::cerr << "Warning: Attempt to insert duplicate key '" << key << "." << std::endl;
+            return;
+        }
+        Node<K, V> *z = new Node<K, V>(key_value.first, key_value.second);
+        while (x)
+        {
+            y = x;
+            if (key < x->key())
+                x = x->left();
+            else
+                x = x->right();
+        }
+        z->parent = y;
+        if (!y)
+            root_ = z;
+        else if (key < y->key())
+            y->left = z;
+        else
+            y->right = z;
+        z->color = RED;
+        insert_fixup(z);
     }
 
     /**
@@ -420,9 +442,53 @@ private:
      */
     void insert_fixup(Node<K, V> *z)
     {
-        // TODO
-
-        // Last line below
+        while (z->parent && z->parent.color == RED)
+        {
+            if (z->parent == z->parent->parent->left)
+            {
+                y = z->parent->parent.right;
+                if (y->color == RED)
+                {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->p->p->color = RED;
+                    z = z->p->p;
+                }
+                else
+                {
+                    if (z == z->parent->right)
+                    {
+                        z = z->parent;
+                        left_rotate(z);
+                    }
+                    z->p->color = BLACK;
+                    z->p->p->color = RED;
+                    right_rotate(z->p->p);
+                }
+            }
+            else
+            {
+                y = z->parent->parent.left;
+                if (y->color == RED)
+                {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->p->p->color = RED;
+                    z = z->p->p;
+                }
+                else
+                {
+                    if (z == z->parent->left)
+                    {
+                        z = z->parent;
+                        right_rotate(z);
+                    }
+                    z->p->color = BLACK;
+                    z->p->p->color = RED;
+                    left_rotate(z->p->p);
+                }
+            }
+        }
         root_->color = BLACK;
     }
 
@@ -470,37 +536,30 @@ private:
      * Returns the height of the red-black tree starting at node.
      * A null node starts at height -1.
      */
-<<<<<<< HEAD
-    int height(Node<K, V> *node) const {
-        if (node == nullptr) {
-            return -1;
-        }
-        return 1 + max(height(node->left), height(node->right));
-=======
     int height(Node<K, V> *node) const
     {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
+        if (node == nullptr)
+        {
+            return -1;
+        }
+        return 1 + std::max(height(node->left), height(node->right));
     }
 
     /**
      * Returns the count of leaves in the red-black tree starting at node.
      * For this method, a leaf is a non-null node that has no children.
      */
-<<<<<<< HEAD
-    size_t leaf_count(Node<K, V> *node) const {
-        if (node == nullptr) {
+    size_t leaf_count(Node<K, V> *node) const
+    {
+        if (node == nullptr)
+        {
             return 0;
         }
-        else if (node->left == nullptr && node->right == nullptr) {
+        else if (node->left == nullptr && node->right == nullptr)
+        {
             return 1;
         }
         return leaf_count(node->left) + leaf_count(node->right);
-=======
-    size_t leaf_count(Node<K, V> *node) const
-    {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
     }
 
     /**
@@ -521,28 +580,35 @@ private:
      */
     int diameter(Node<K, V> *node) const
     {
-        // TODO
+        if (!node)
+            return 0;
+
+        int left_height = height(node->left) + 1;
+        int right_height = height(node->right) + 1;
+        int left_diam = diameter(node->left);
+        int right_diam = diameter(node->right);
+
+        return std::max(left_height + right_height, std::max(left_diam, right_diam));
     }
 
     /**
      * Returns the width of the red-black tree at the designated level.
      * Width is defined as the number of nodes residing at a level.
      */
-<<<<<<< HEAD
-    size_t width(Node<K, V> *node, size_t level) const {
-        if (level = ) {
-            return 0;
-        }
-        else if (level = 0) {
-            return 1;
-        } else {
-            return width(node->left, level - 1) + width(node->right, level - 1);
-        }
-=======
     size_t width(Node<K, V> *node, size_t level) const
     {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
+        if (level =)
+        {
+            return 0;
+        }
+        else if (level = 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return width(node->left, level - 1) + width(node->right, level - 1);
+        }
     }
 
     size_t null_count() const
@@ -553,17 +619,11 @@ private:
     /**
      * Returns the count of null nodes in the red-black tree starting at node.
      */
-<<<<<<< HEAD
-    size_t null_count(Node<K, V> *node) const {
-        if (node == nullptr) {
-            return 1;
-        }
-        return null_count(node->left) + null_count(node->right);
-=======
     size_t null_count(Node<K, V> *node) const
     {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
+        if (node == nullptr)
+            return 1;
+        return null_count(node->left) + null_count(node->right);
     }
 
     size_t sum_levels() const
