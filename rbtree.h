@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Name        : rbtree.h
- * Author      : 
+ * Author      : Ryan Hartman and Daniel Pekata
  * Version     : 1.0
  * Date        : 
  * Description : Implementation of red-black tree.
- * Pledge      :
+ * Pledge      : I pledge my honor that I have abided by the Stevens Honor System.
  ******************************************************************************/
 #ifndef RBTREE_H_
 #define RBTREE_H_
@@ -215,7 +215,7 @@ public:
             x = root_;
             y = NULL;
         }
-        // TODO
+        if (find(key))
     }
 
     /**
@@ -385,7 +385,10 @@ private:
      * A null node starts at height -1.
      */
     int height(Node<K, V> *node) const {
-        // TODO
+        if (node == nullptr) {
+            return -1;
+        }
+        return 1 + max(height(node->left), height(node->right));
     }
 
     /**
@@ -393,7 +396,13 @@ private:
      * For this method, a leaf is a non-null node that has no children.
      */
     size_t leaf_count(Node<K, V> *node) const {
-        // TODO
+        if (node == nullptr) {
+            return 0;
+        }
+        else if (node->left == nullptr && node->right == nullptr) {
+            return 1;
+        }
+        return leaf_count(node->left) + leaf_count(node->right);
     }
 
     /**
@@ -420,7 +429,14 @@ private:
      * Width is defined as the number of nodes residing at a level.
      */
     size_t width(Node<K, V> *node, size_t level) const {
-        // TODO
+        if (level = ) {
+            return 0;
+        }
+        else if (level = 0) {
+            return 1;
+        } else {
+            return width(node->left, level - 1) + width(node->right, level - 1);
+        }
     }
 
     size_t null_count() const {
@@ -431,7 +447,10 @@ private:
      * Returns the count of null nodes in the red-black tree starting at node.
      */
     size_t null_count(Node<K, V> *node) const {
-        // TODO
+        if (node == nullptr) {
+            return 1;
+        }
+        return null_count(node->left) + null_count(node->right);
     }
 
     size_t sum_levels() const {
