@@ -264,6 +264,8 @@ public:
             y->left = z;
         else
             y->right = z;
+        z->right = nullptr;
+        z->left = nullptr;
         z->color = RED;
         size_++;
         insert_fixup(z);
@@ -443,13 +445,18 @@ private:
      */
     void insert_fixup(Node<K, V> *z)
     {
+        if (z == root_)
+        {
+            z->color = BLACK;
+            return;
+        }
         Node<K, V> *y;
         while (z->parent && z->parent->color == RED)
         {
-            if (z->parent->parent && z->parent == z->parent->parent->left)
+            if (z->parent == z->parent->parent->left)
             {
                 y = z->parent->parent->right;
-                if (y->color == RED)
+                if (y && y->color == RED)
                 {
                     z->parent->color = BLACK;
                     y->color = BLACK;
@@ -464,14 +471,17 @@ private:
                         left_rotate(z);
                     }
                     z->parent->color = BLACK;
-                    z->parent->parent->color = RED;
-                    right_rotate(z->parent->parent);
+                    if (z->parent->parent)
+                    {
+                        z->parent->parent->color = RED;
+                        right_rotate(z->parent->parent);
+                    }
                 }
             }
-            else if (z->parent->parent)
+            else
             {
                 y = z->parent->parent->left;
-                if (y->color == RED)
+                if (y && y->color == RED)
                 {
                     z->parent->color = BLACK;
                     y->color = BLACK;
@@ -486,8 +496,11 @@ private:
                         right_rotate(z);
                     }
                     z->parent->color = BLACK;
-                    z->parent->parent->color = RED;
-                    left_rotate(z->parent->parent);
+                    if (z->parent->parent)
+                    {
+                        z->parent->parent->color = RED;
+                        left_rotate(z->parent->parent);
+                    }
                 }
             }
         }
