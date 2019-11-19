@@ -253,9 +253,9 @@ public:
         {
             y = x;
             if (key < x->key())
-                x = x->left();
+                x = x->left;
             else
-                x = x->right();
+                x = x->right;
         }
         z->parent = y;
         if (!y)
@@ -265,6 +265,7 @@ public:
         else
             y->right = z;
         z->color = RED;
+        size_++;
         insert_fixup(z);
     }
 
@@ -442,17 +443,18 @@ private:
      */
     void insert_fixup(Node<K, V> *z)
     {
-        while (z->parent && z->parent.color == RED)
+        Node<K, V> *y;
+        while (z->parent && z->parent->color == RED)
         {
-            if (z->parent == z->parent->parent->left)
+            if (z->parent->parent && z->parent == z->parent->parent->left)
             {
-                y = z->parent->parent.right;
+                y = z->parent->parent->right;
                 if (y->color == RED)
                 {
                     z->parent->color = BLACK;
                     y->color = BLACK;
-                    z->p->p->color = RED;
-                    z = z->p->p;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
                 }
                 else
                 {
@@ -461,20 +463,20 @@ private:
                         z = z->parent;
                         left_rotate(z);
                     }
-                    z->p->color = BLACK;
-                    z->p->p->color = RED;
-                    right_rotate(z->p->p);
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    right_rotate(z->parent->parent);
                 }
             }
-            else
+            else if (z->parent->parent)
             {
-                y = z->parent->parent.left;
+                y = z->parent->parent->left;
                 if (y->color == RED)
                 {
                     z->parent->color = BLACK;
                     y->color = BLACK;
-                    z->p->p->color = RED;
-                    z = z->p->p;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
                 }
                 else
                 {
@@ -483,9 +485,9 @@ private:
                         z = z->parent;
                         right_rotate(z);
                     }
-                    z->p->color = BLACK;
-                    z->p->p->color = RED;
-                    left_rotate(z->p->p);
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    left_rotate(z->parent->parent);
                 }
             }
         }
@@ -504,12 +506,12 @@ private:
         y->parent = x->parent;
         if (!x->parent)
             root_ = y;
-        else if (x == x->p->left)
-            x->p->left = y;
+        else if (x == x->parent->left)
+            x->parent->left = y;
         else
-            x->p->right = y;
+            x->parent->right = y;
         y->left = x;
-        x->p = y;
+        x->parent = y;
     }
 
     /**
@@ -524,12 +526,12 @@ private:
         y->parent = x->parent;
         if (!x->parent)
             root_ = y;
-        else if (x == x->p->right)
-            x->p->right = y;
+        else if (x == x->parent->right)
+            x->parent->right = y;
         else
-            x->p->left = y;
+            x->parent->left = y;
         y->right = x;
-        x->p = y;
+        x->parent = y;
     }
 
     /**
@@ -605,11 +607,11 @@ private:
      */
     size_t width(Node<K, V> *node, size_t level) const
     {
-        if (level =)
+        if (!node)
         {
             return 0;
         }
-        else if (level = 0)
+        else if (level == 0)
         {
             return 1;
         }
