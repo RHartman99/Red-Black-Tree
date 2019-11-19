@@ -569,7 +569,15 @@ private:
      */
     size_t internal_node_count(Node<K, V> *node) const
     {
-        // TODO
+        if (node == nullptr)
+        {
+            return 0;
+        }
+        else if (node->left != nullptr || node->right != nullptr)
+        {
+            return 1;
+        }
+        return internal_node_count(node->left) + internal_node_count(node->right);
     }
 
     /**
@@ -644,7 +652,11 @@ private:
      */
     size_t sum_levels(Node<K, V> *node, size_t level) const
     {
-        // TODO
+        if (node == nullptr)
+        {
+            return 0;
+        }
+        return level + sum_levels(node->left, level + 1) + sum_levels(node->right, level + 1);
     }
 
     size_t sum_null_levels() const
@@ -667,7 +679,11 @@ private:
      */
     size_t sum_null_levels(Node<K, V> *node, size_t level) const
     {
-        // TODO
+        if (node == nullptr)
+        {
+            return 1 * level;
+        }
+        return sum_null_levels(node->left, level + 1) + sum_null_levels(node->right, level + 1);
     }
 };
 
