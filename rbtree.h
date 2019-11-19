@@ -245,7 +245,7 @@ public:
         }
         if (find(key) != end())
         {
-            std::cerr << "Warning: Attempt to insert duplicate key '" << key << "." << std::endl;
+            std::cerr << "Warning: Attempt to insert duplicate key '" << key << "'." << std::endl;
             return;
         }
         Node<K, V> *z = new Node<K, V>(key_value.first, key_value.second);
@@ -340,9 +340,7 @@ public:
         {
             size_t w = width(root_, i);
             if (w > max_width)
-            {
                 max_width = w;
-            }
         }
         return max_width;
     }
@@ -584,15 +582,9 @@ private:
      */
     size_t internal_node_count(Node<K, V> *node) const
     {
-        if (node == nullptr)
-        {
+        if (node == nullptr || (!node->left && !node->right))
             return 0;
-        }
-        else if (node->left != nullptr || node->right != nullptr)
-        {
-            return 1;
-        }
-        return internal_node_count(node->left) + internal_node_count(node->right);
+        return 1 + internal_node_count(node->left) + internal_node_count(node->right);
     }
 
     /**
