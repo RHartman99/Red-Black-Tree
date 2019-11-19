@@ -470,24 +470,17 @@ private:
      * Returns the height of the red-black tree starting at node.
      * A null node starts at height -1.
      */
-<<<<<<< HEAD
     int height(Node<K, V> *node) const {
         if (node == nullptr) {
             return -1;
         }
         return 1 + max(height(node->left), height(node->right));
-=======
-    int height(Node<K, V> *node) const
-    {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
     }
 
     /**
      * Returns the count of leaves in the red-black tree starting at node.
      * For this method, a leaf is a non-null node that has no children.
      */
-<<<<<<< HEAD
     size_t leaf_count(Node<K, V> *node) const {
         if (node == nullptr) {
             return 0;
@@ -496,11 +489,6 @@ private:
             return 1;
         }
         return leaf_count(node->left) + leaf_count(node->right);
-=======
-    size_t leaf_count(Node<K, V> *node) const
-    {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
     }
 
     /**
@@ -510,7 +498,13 @@ private:
      */
     size_t internal_node_count(Node<K, V> *node) const
     {
-        // TODO
+        if (node == nullptr) {
+            return 0;
+        }
+        else if (node->left != nullptr || node->right != nullptr) {
+            return 1;
+        }
+        return internal_node_count(node->left) + internal_node_count(node->right);
     }
 
     /**
@@ -521,14 +515,13 @@ private:
      */
     int diameter(Node<K, V> *node) const
     {
-        // TODO
+
     }
 
     /**
      * Returns the width of the red-black tree at the designated level.
      * Width is defined as the number of nodes residing at a level.
      */
-<<<<<<< HEAD
     size_t width(Node<K, V> *node, size_t level) const {
         if (level = ) {
             return 0;
@@ -538,11 +531,6 @@ private:
         } else {
             return width(node->left, level - 1) + width(node->right, level - 1);
         }
-=======
-    size_t width(Node<K, V> *node, size_t level) const
-    {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
     }
 
     size_t null_count() const
@@ -553,17 +541,11 @@ private:
     /**
      * Returns the count of null nodes in the red-black tree starting at node.
      */
-<<<<<<< HEAD
     size_t null_count(Node<K, V> *node) const {
         if (node == nullptr) {
             return 1;
         }
         return null_count(node->left) + null_count(node->right);
-=======
-    size_t null_count(Node<K, V> *node) const
-    {
-        // TODO
->>>>>>> 642b4aadf9efc5f53bba4797d96fb6aa23146894
     }
 
     size_t sum_levels() const
@@ -584,7 +566,10 @@ private:
      */
     size_t sum_levels(Node<K, V> *node, size_t level) const
     {
-        // TODO
+        if (node == nullptr) {
+            return 0;
+        }
+        return level + sum_levels(node->left, level + 1) + sum_levels(node->right, level + 1);
     }
 
     size_t sum_null_levels() const
@@ -607,7 +592,10 @@ private:
      */
     size_t sum_null_levels(Node<K, V> *node, size_t level) const
     {
-        // TODO
+        if (node == nullptr) {
+            return 1 * level;
+        }
+        return sum_null_levels(node->left, level + 1) + sum_null_levels(node->right, level + 1);
     }
 };
 
